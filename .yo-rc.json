@@ -1,0 +1,39 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.store",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.9.1",
+    "applicationType": "monolith",
+    "baseName": "store",
+    "packageName": "com.store",
+    "packageFolder": "com/store",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mariadb",
+    "prodDatabaseType": "mariadb",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MzMxNmY5NjQzZTQwZTkzNzVjZjlmMDQzMmNjYjFiZWIyNzA1ZGIzZDIxMTA5MzM4ZDMyOTZlNDc4ZjY3OGNkMzczODlmZDMxZTg0ZTI2Njk0ZmMzMDY1YWNlNzY0MDkwNzY5M2E2YzdhNjhkNzgwZTkzZjY0ZTgzYjY3YWNmZGI=",
+    "embeddableLaunchScript": false,
+    "creationTimestamp": 1591374156583,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "clientPackageManager": "yarn",
+    "nativeLanguage": "en",
+    "languages": ["en", "bg", "es"],
+    "blueprints": [],
+    "skipClient": true
+  }
+}
