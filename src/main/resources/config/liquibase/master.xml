@@ -16,8 +16,15 @@
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200607004922_added_entity_WineStore.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200607005207_added_entity_WineStoreAddress.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200607161123_added_entity_WineStock.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200607161838_added_entity_WineOffer.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200607190830_added_entity_WineCustomer.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200607194244_added_entity_WineSale.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20200607005207_added_entity_constraints_WineStoreAddress.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200607161838_added_entity_constraints_WineOffer.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200607190830_added_entity_constraints_WineCustomer.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200607194244_added_entity_constraints_WineSale.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

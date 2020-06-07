@@ -1,0 +1,79 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "supplier",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "region",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "vintage",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "alcoholLevel",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMin": "0",
+      "fieldValidateRulesMax": "90"
+    },
+    {
+      "fieldName": "printRun",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "price",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "physical",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "purchases",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "sales",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "availability",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "pxRevCol",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "lastPurchasePrice",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "lastPurchaseDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "dateImport",
+      "fieldType": "Instant"
+    }
+  ],
+  "changelogDate": "20200607161123",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "wine_stock",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

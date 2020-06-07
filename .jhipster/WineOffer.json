@@ -1,0 +1,43 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "wineStock",
+      "otherEntityName": "wineStock",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "wineOffer"
+    },
+    {
+      "relationshipName": "wineStore",
+      "otherEntityName": "wineStore",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "wineOffer"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "isAvailable",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "price",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "specialPrice",
+      "fieldType": "Float"
+    }
+  ],
+  "changelogDate": "20200607161838",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "wine_offer",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}

@@ -1,0 +1,58 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "wineCustomer",
+      "otherEntityName": "wineCustomer",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "wineSale"
+    },
+    {
+      "relationshipName": "wineStock",
+      "otherEntityName": "wineStock",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "wineSale"
+    },
+    {
+      "relationshipName": "wineStore",
+      "otherEntityName": "wineStore",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "wineSale"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "shippingDescription",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "shippingAmount",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "discount",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "total",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "state",
+      "fieldType": "Integer"
+    }
+  ],
+  "changelogDate": "20200607194244",
+  "dto": "mapstruct",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "wine_sale",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": true,
+  "pagination": "pagination"
+}
