@@ -2,8 +2,13 @@ package com.store.web.rest;
 
 import com.store.service.WineCustomerService;
 import com.store.web.rest.errors.BadRequestAlertException;
+import com.store.web.rest.errors.InvalidPasswordException;
+import com.store.web.rest.vm.ManagedCustomerVM;
 import com.store.service.dto.WineCustomerDTO;
 import com.store.service.dto.WineCustomerCriteria;
+import com.store.domain.User;
+import com.store.service.MailService;
+import com.store.service.UserService;
 import com.store.service.WineCustomerQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -25,6 +30,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 /**
  * REST controller for managing {@link com.store.domain.WineCustomer}.
  */
@@ -39,13 +46,46 @@ public class WineCustomerResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final UserService userService;
+
+    private final MailService mailService;
+    
     private final WineCustomerService wineCustomerService;
 
     private final WineCustomerQueryService wineCustomerQueryService;
 
-    public WineCustomerResource(WineCustomerService wineCustomerService, WineCustomerQueryService wineCustomerQueryService) {
+    public WineCustomerResource(WineCustomerService wineCustomerService, WineCustomerQueryService wineCustomerQueryService, UserService userService, MailService mailService) {
         this.wineCustomerService = wineCustomerService;
         this.wineCustomerQueryService = wineCustomerQueryService;
+        this.userService = userService;
+        this.mailService = mailService;        
+    }
+
+    /**
+     * {@code POST  /register-customer} : register the customer.
+     *
+     * @param ManagedCustomerVM the managed user View Model.
+     * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
+     * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
+     * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
+     */
+    @PostMapping("/register-customer")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void registerCustomer(@Valid @RequestBody ManagedCustomerVM managedCustomerVM) {
+        
+        log.debug("REST request to register WineCustomer : {}", managedCustomerVM);
+      
+        if (!userService.checkPasswordLength(managedCustomerVM.getPassword())) {
+            throw new InvalidPasswordException();
+        }
+        User user = userService.registerUser(managedCustomerVM, managedCustomerVM.getPassword());
+
+        WineCustomerDTO wineCustomerDTO = new WineCustomerDTO();
+        wineCustomerDTO.setAddress(managedCustomerVM.getAddress());
+        wineCustomerDTO.setPhone(managedCustomerVM.getPhone());
+        wineCustomerDTO.setUserId(user.getId());
+        wineCustomerService.save(wineCustomerDTO);
+        mailService.sendActivationEmail(user);
     }
 
     /**

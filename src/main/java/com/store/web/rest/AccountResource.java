@@ -11,7 +11,6 @@ import com.store.web.rest.errors.*;
 import com.store.web.rest.vm.KeyAndPasswordVM;
 import com.store.web.rest.vm.ManagedUserVM;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -60,7 +59,7 @@ public class AccountResource {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
-        if (!checkPasswordLength(managedUserVM.getPassword())) {
+        if (!userService.checkPasswordLength(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
@@ -136,7 +135,7 @@ public class AccountResource {
      */
     @PostMapping(path = "/account/change-password")
     public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
-        if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
+        if (!userService.checkPasswordLength(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
         }
         userService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
@@ -168,7 +167,7 @@ public class AccountResource {
      */
     @PostMapping(path = "/account/reset-password/finish")
     public void finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
-        if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
+        if (!userService.checkPasswordLength(keyAndPassword.getNewPassword())) {
             throw new InvalidPasswordException();
         }
         Optional<User> user =
@@ -177,11 +176,5 @@ public class AccountResource {
         if (!user.isPresent()) {
             throw new AccountResourceException("No user was found for this reset key");
         }
-    }
-
-    private static boolean checkPasswordLength(String password) {
-        return !StringUtils.isEmpty(password) &&
-            password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH &&
-            password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH;
     }
 }

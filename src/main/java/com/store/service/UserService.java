@@ -8,7 +8,8 @@ import com.store.repository.UserRepository;
 import com.store.security.AuthoritiesConstants;
 import com.store.security.SecurityUtils;
 import com.store.service.dto.UserDTO;
-
+import com.store.web.rest.vm.ManagedUserVM;
+import org.apache.commons.lang3.StringUtils;
 import io.github.jhipster.security.RandomUtil;
 
 import org.slf4j.Logger;
@@ -276,6 +277,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<String> getAuthorities() {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+    }
+
+    public boolean checkPasswordLength(String password) {
+        return !StringUtils.isEmpty(password) &&
+            password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH &&
+            password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH;
     }
 
 }
