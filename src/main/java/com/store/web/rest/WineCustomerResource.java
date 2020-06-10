@@ -5,6 +5,7 @@ import com.store.web.rest.errors.BadRequestAlertException;
 import com.store.web.rest.errors.InvalidPasswordException;
 import com.store.web.rest.vm.ManagedCustomerVM;
 import com.store.service.dto.WineCustomerDTO;
+import com.store.service.dto.UserDTO;
 import com.store.service.dto.WineCustomerCriteria;
 import com.store.domain.User;
 import com.store.service.MailService;
@@ -123,6 +124,13 @@ public class WineCustomerResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         WineCustomerDTO result = wineCustomerService.save(wineCustomerDTO);
+
+        if(wineCustomerDTO.getUserId() != null)
+        {
+            wineCustomerDTO.setId(wineCustomerDTO.getUserId());
+            userService.updateUser(wineCustomerDTO);
+        }
+
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, wineCustomerDTO.getId().toString()))
             .body(result);
