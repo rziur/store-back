@@ -5,27 +5,14 @@ import java.io.Serializable;
 /**
  * A DTO for the {@link com.store.domain.WineCustomer} entity.
  */
-public class WineCustomerDTO implements Serializable {
+public class WineCustomerDTO extends UserDTO  implements Serializable {
     
-    private Long id;
-
     private String address;
 
     private String phone;
 
-
     private Long userId;
-
-    private String userLogin;
     
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -50,14 +37,6 @@ public class WineCustomerDTO implements Serializable {
         this.userId = userId;
     }
 
-    public String getUserLogin() {
-        return userLogin;
-    }
-
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -67,7 +46,7 @@ public class WineCustomerDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((WineCustomerDTO) o).id);
+        return getId() != null && getId().equals(((WineCustomerDTO) o).getId());
     }
 
     @Override
@@ -80,10 +59,20 @@ public class WineCustomerDTO implements Serializable {
     public String toString() {
         return "WineCustomerDTO{" +
             "id=" + getId() +
+            ", login='" + getLogin() + '\'' +
+            ", firstName='" + getFirstName() + '\'' +
+            ", lastName='" + getLastName() + '\'' +
+            ", email='" + getEmail() + '\'' +
+            ", imageUrl='" + getImageUrl() + '\'' +
+            ", activated=" + isActivated() +
+            ", langKey='" + getLangKey() + '\'' +
+            ", createdBy=" + getCreatedBy() +
+            ", createdDate=" + getCreatedDate() +
+            ", lastModifiedBy='" + getLastModifiedBy() + '\'' +
+            ", lastModifiedDate=" + getLastModifiedDate() +
             ", address='" + getAddress() + "'" +
             ", phone='" + getPhone() + "'" +
             ", userId=" + getUserId() +
-            ", userLogin='" + getUserLogin() + "'" +
             "}";
     }
 }

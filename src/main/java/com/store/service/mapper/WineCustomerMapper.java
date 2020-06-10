@@ -13,7 +13,17 @@ import org.mapstruct.*;
 public interface WineCustomerMapper extends EntityMapper<WineCustomerDTO, WineCustomer> {
 
     @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "user.login", target = "userLogin")
+    @Mapping(source = "user.login", target = "login")
+    @Mapping(source = "user.firstName", target = "firstName")
+    @Mapping(source = "user.lastName", target = "lastName")
+    @Mapping(source = "user.email", target = "email")
+    @Mapping(source = "user.imageUrl", target = "imageUrl")
+    @Mapping(source = "user.activated", target = "activated")
+    @Mapping(source = "user.langKey", target = "langKey")
+    @Mapping(source = "user.createdBy", target = "createdBy")
+    @Mapping(source = "user.createdDate", target = "createdDate")
+    @Mapping(source = "user.lastModifiedBy", target = "lastModifiedBy")
+    @Mapping(source = "user.lastModifiedDate", target = "lastModifiedDate")
     WineCustomerDTO toDto(WineCustomer wineCustomer);
 
     @Mapping(source = "userId", target = "user")
