@@ -6,7 +6,9 @@ import com.store.repository.UserRepository;
 import com.store.security.AuthoritiesConstants;
 import com.store.service.MailService;
 import com.store.service.UserService;
+import com.store.service.WineCustomerService;
 import com.store.service.dto.UserDTO;
+import com.store.service.dto.WineCustomerDTO;
 import com.store.web.rest.errors.BadRequestAlertException;
 import com.store.web.rest.errors.EmailAlreadyUsedException;
 import com.store.web.rest.errors.LoginAlreadyUsedException;
@@ -65,16 +67,19 @@ public class UserResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final WineCustomerService wineCustomerService;
+    
     private final UserService userService;
 
     private final UserRepository userRepository;
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    public UserResource(UserService userService, UserRepository userRepository, MailService mailService, WineCustomerService wineCustomerService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.wineCustomerService = wineCustomerService;
     }
 
     /**
@@ -119,7 +124,6 @@ public class UserResource {
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already in use.
      */
     @PutMapping("/users")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO) {
         log.debug("REST request to update User : {}", userDTO);
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
@@ -183,7 +187,21 @@ public class UserResource {
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteUser(@PathVariable String login) {
         log.debug("REST request to delete User: {}", login);
+        
+
+        Optional<User> existingUser = userRepository.findOneByLogin(login.toLowerCase());
+        if (existingUser.isPresent()) {
+            
+            Optional<WineCustomerDTO> existingCustomer = wineCustomerService.findOneByUserId(existingUser.get().getId());
+
+            if(existingCustomer.isPresent()) {
+                wineCustomerService.delete(existingCustomer.get().getId());
+            }
+
+        }
+        
         userService.deleteUser(login);
+        
         return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName,  "userManagement.deleted", login)).build();
     }
 }

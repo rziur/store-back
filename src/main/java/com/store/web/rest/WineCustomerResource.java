@@ -3,11 +3,16 @@ package com.store.web.rest;
 import com.store.service.WineCustomerService;
 import com.store.web.rest.errors.BadRequestAlertException;
 import com.store.web.rest.errors.InvalidPasswordException;
+import com.store.web.rest.errors.LoginAlreadyUsedException;
 import com.store.web.rest.vm.ManagedCustomerVM;
 import com.store.service.dto.WineCustomerDTO;
 import com.store.service.dto.UserDTO;
 import com.store.service.dto.WineCustomerCriteria;
 import com.store.domain.User;
+import com.store.repository.UserRepository;
+import com.store.security.AuthoritiesConstants;
+import com.store.security.SecurityUtils;
+import com.store.service.EmailAlreadyUsedException;
 import com.store.service.MailService;
 import com.store.service.UserService;
 import com.store.service.WineCustomerQueryService;
@@ -24,6 +29,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -40,6 +46,12 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class WineCustomerResource {
 
+    private static class CustomerAccountResourceException extends RuntimeException {
+        private CustomerAccountResourceException(String message) {
+            super(message);
+        }
+    }
+
     private final Logger log = LoggerFactory.getLogger(WineCustomerResource.class);
 
     private static final String ENTITY_NAME = "wineCustomer";
@@ -47,6 +59,8 @@ public class WineCustomerResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final UserRepository userRepository;
+    
     private final UserService userService;
 
     private final MailService mailService;
@@ -55,10 +69,11 @@ public class WineCustomerResource {
 
     private final WineCustomerQueryService wineCustomerQueryService;
 
-    public WineCustomerResource(WineCustomerService wineCustomerService, WineCustomerQueryService wineCustomerQueryService, UserService userService, MailService mailService) {
+    public WineCustomerResource(WineCustomerService wineCustomerService, WineCustomerQueryService wineCustomerQueryService, UserService userService, UserRepository userRepository, MailService mailService) {
         this.wineCustomerService = wineCustomerService;
         this.wineCustomerQueryService = wineCustomerQueryService;
         this.userService = userService;
+        this.userRepository = userRepository;
         this.mailService = mailService;        
     }
 
@@ -90,6 +105,44 @@ public class WineCustomerResource {
     }
 
     /**
+     * {@code POST  /wine-customers/account} : update the current customer information.
+     *
+     * @param userDTO the current customer information.
+     * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
+     * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
+     */
+    @PostMapping("/wine-customers/account")
+    public void saveCustomerAccount(@Valid @RequestBody WineCustomerDTO wineCustomerDTO) {
+        
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new CustomerAccountResourceException("Current user login not found"));
+        
+        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(wineCustomerDTO.getEmail());
+        
+        if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
+            throw new EmailAlreadyUsedException();
+        }
+        
+        Optional<User> user = userRepository.findOneByLogin(userLogin);
+        
+        if (!user.isPresent()) {
+            throw new CustomerAccountResourceException("User could not be found");
+        }
+
+        wineCustomerService.save(wineCustomerDTO);
+
+        if(wineCustomerDTO.getUserId() != null)
+        {
+            userService.updateUser(
+                wineCustomerDTO.getFirstName(), 
+                wineCustomerDTO.getLastName(), 
+                wineCustomerDTO.getEmail(),
+                wineCustomerDTO.getLangKey(), 
+                wineCustomerDTO.getImageUrl()
+            );
+        }
+    }
+
+    /**
      * {@code POST  /wine-customers} : Create a new wineCustomer.
      *
      * @param wineCustomerDTO the wineCustomerDTO to create.
@@ -97,15 +150,31 @@ public class WineCustomerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/wine-customers")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineCustomerDTO> createWineCustomer(@RequestBody WineCustomerDTO wineCustomerDTO) throws URISyntaxException {
         log.debug("REST request to save WineCustomer : {}", wineCustomerDTO);
         if (wineCustomerDTO.getId() != null) {
             throw new BadRequestAlertException("A new wineCustomer cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        WineCustomerDTO result = wineCustomerService.save(wineCustomerDTO);
-        return ResponseEntity.created(new URI("/api/wine-customers/" + result.getId()))
+        }  else if (userRepository.findOneByLogin(wineCustomerDTO.getLogin().toLowerCase()).isPresent()) {
+            throw new LoginAlreadyUsedException();
+        } else if (userRepository.findOneByEmailIgnoreCase(wineCustomerDTO.getEmail()).isPresent()) {
+            throw new EmailAlreadyUsedException();
+        } else {
+        
+            User newUser = userService.createUser(wineCustomerDTO);
+
+            wineCustomerDTO.setUserId(newUser.getId());
+
+            WineCustomerDTO result = wineCustomerService.save(wineCustomerDTO);
+
+            mailService.sendCreationEmail(newUser);
+
+            return ResponseEntity.created(new URI("/api/wine-customers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
+
+        }
+        
     }
 
     /**
@@ -118,11 +187,21 @@ public class WineCustomerResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/wine-customers")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineCustomerDTO> updateWineCustomer(@RequestBody WineCustomerDTO wineCustomerDTO) throws URISyntaxException {
         log.debug("REST request to update WineCustomer : {}", wineCustomerDTO);
         if (wineCustomerDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(wineCustomerDTO.getEmail());
+        if (existingUser.isPresent() && (!existingUser.get().getId().equals(wineCustomerDTO.getUserId()))) {
+            throw new EmailAlreadyUsedException();
+        }
+        existingUser = userRepository.findOneByLogin(wineCustomerDTO.getLogin().toLowerCase());
+        if (existingUser.isPresent() && (!existingUser.get().getId().equals(wineCustomerDTO.getUserId()))) {
+            throw new LoginAlreadyUsedException();
+        }
+        
         WineCustomerDTO result = wineCustomerService.save(wineCustomerDTO);
 
         if(wineCustomerDTO.getUserId() != null)
@@ -183,9 +262,18 @@ public class WineCustomerResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/wine-customers/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteWineCustomer(@PathVariable Long id) {
         log.debug("REST request to delete WineCustomer : {}", id);
+        
+        Optional<WineCustomerDTO> existingUser = wineCustomerService.findOne(id);        
+        
         wineCustomerService.delete(id);
+        
+        if (existingUser.isPresent()) {
+            userService.deleteUser(existingUser.get().getLogin());
+        }        
+        
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

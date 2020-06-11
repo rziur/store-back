@@ -38,6 +38,14 @@ public interface WineCustomerService {
     Optional<WineCustomerDTO> findOne(Long id);
 
     /**
+     * Get the "id" wineCustomer by userId.
+     *
+     * @param userId the userId of the entity.
+     * @return the entity.
+     */
+    Optional<WineCustomerDTO> findOneByUserId(Long userId);
+
+    /**
      * Delete the "id" wineCustomer.
      *
      * @param id the id of the entity.

@@ -4,6 +4,7 @@ import com.store.service.WineSaleService;
 import com.store.web.rest.errors.BadRequestAlertException;
 import com.store.service.dto.WineSaleDTO;
 import com.store.service.dto.WineSaleCriteria;
+import com.store.security.AuthoritiesConstants;
 import com.store.service.WineSaleQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -56,6 +58,7 @@ public class WineSaleResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/wine-sales")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineSaleDTO> createWineSale(@RequestBody WineSaleDTO wineSaleDTO) throws URISyntaxException {
         log.debug("REST request to save WineSale : {}", wineSaleDTO);
         if (wineSaleDTO.getId() != null) {
@@ -77,6 +80,7 @@ public class WineSaleResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/wine-sales")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineSaleDTO> updateWineSale(@RequestBody WineSaleDTO wineSaleDTO) throws URISyntaxException {
         log.debug("REST request to update WineSale : {}", wineSaleDTO);
         if (wineSaleDTO.getId() == null) {
@@ -135,6 +139,7 @@ public class WineSaleResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/wine-sales/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteWineSale(@PathVariable Long id) {
         log.debug("REST request to delete WineSale : {}", id);
         wineSaleService.delete(id);

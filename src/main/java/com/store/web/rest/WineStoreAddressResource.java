@@ -4,6 +4,7 @@ import com.store.service.WineStoreAddressService;
 import com.store.web.rest.errors.BadRequestAlertException;
 import com.store.service.dto.WineStoreAddressDTO;
 import com.store.service.dto.WineStoreAddressCriteria;
+import com.store.security.AuthoritiesConstants;
 import com.store.service.WineStoreAddressQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -56,6 +58,7 @@ public class WineStoreAddressResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/wine-store-addresses")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineStoreAddressDTO> createWineStoreAddress(@RequestBody WineStoreAddressDTO wineStoreAddressDTO) throws URISyntaxException {
         log.debug("REST request to save WineStoreAddress : {}", wineStoreAddressDTO);
         if (wineStoreAddressDTO.getId() != null) {
@@ -77,6 +80,7 @@ public class WineStoreAddressResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/wine-store-addresses")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineStoreAddressDTO> updateWineStoreAddress(@RequestBody WineStoreAddressDTO wineStoreAddressDTO) throws URISyntaxException {
         log.debug("REST request to update WineStoreAddress : {}", wineStoreAddressDTO);
         if (wineStoreAddressDTO.getId() == null) {
@@ -96,6 +100,7 @@ public class WineStoreAddressResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of wineStoreAddresses in body.
      */
     @GetMapping("/wine-store-addresses")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<WineStoreAddressDTO>> getAllWineStoreAddresses(WineStoreAddressCriteria criteria, Pageable pageable) {
         log.debug("REST request to get WineStoreAddresses by criteria: {}", criteria);
         Page<WineStoreAddressDTO> page = wineStoreAddressQueryService.findByCriteria(criteria, pageable);
@@ -110,6 +115,7 @@ public class WineStoreAddressResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/wine-store-addresses/count")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Long> countWineStoreAddresses(WineStoreAddressCriteria criteria) {
         log.debug("REST request to count WineStoreAddresses by criteria: {}", criteria);
         return ResponseEntity.ok().body(wineStoreAddressQueryService.countByCriteria(criteria));
@@ -122,6 +128,7 @@ public class WineStoreAddressResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the wineStoreAddressDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/wine-store-addresses/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineStoreAddressDTO> getWineStoreAddress(@PathVariable Long id) {
         log.debug("REST request to get WineStoreAddress : {}", id);
         Optional<WineStoreAddressDTO> wineStoreAddressDTO = wineStoreAddressService.findOne(id);
@@ -135,6 +142,7 @@ public class WineStoreAddressResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/wine-store-addresses/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteWineStoreAddress(@PathVariable Long id) {
         log.debug("REST request to delete WineStoreAddress : {}", id);
         wineStoreAddressService.delete(id);

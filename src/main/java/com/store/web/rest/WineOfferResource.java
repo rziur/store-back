@@ -4,6 +4,7 @@ import com.store.service.WineOfferService;
 import com.store.web.rest.errors.BadRequestAlertException;
 import com.store.service.dto.WineOfferDTO;
 import com.store.service.dto.WineOfferCriteria;
+import com.store.security.AuthoritiesConstants;
 import com.store.service.WineOfferQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -56,6 +58,7 @@ public class WineOfferResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/wine-offers")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineOfferDTO> createWineOffer(@RequestBody WineOfferDTO wineOfferDTO) throws URISyntaxException {
         log.debug("REST request to save WineOffer : {}", wineOfferDTO);
         if (wineOfferDTO.getId() != null) {
@@ -77,6 +80,7 @@ public class WineOfferResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/wine-offers")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineOfferDTO> updateWineOffer(@RequestBody WineOfferDTO wineOfferDTO) throws URISyntaxException {
         log.debug("REST request to update WineOffer : {}", wineOfferDTO);
         if (wineOfferDTO.getId() == null) {
@@ -135,6 +139,7 @@ public class WineOfferResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/wine-offers/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteWineOffer(@PathVariable Long id) {
         log.debug("REST request to delete WineOffer : {}", id);
         wineOfferService.delete(id);

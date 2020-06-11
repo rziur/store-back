@@ -1,6 +1,7 @@
 package com.store.service.impl;
 
 import com.store.service.WineCustomerService;
+import com.store.domain.User;
 import com.store.domain.WineCustomer;
 import com.store.repository.WineCustomerRepository;
 import com.store.service.dto.WineCustomerDTO;
@@ -75,6 +76,21 @@ public class WineCustomerServiceImpl implements WineCustomerService {
         return wineCustomerRepository.findById(id)
             .map(wineCustomerMapper::toDto);
     }
+
+    /**
+     * Get the "id" wineCustomer by userId.
+     *
+     * @param userId the userId of the entity.
+     * @return the entity.
+     */
+    public Optional<WineCustomerDTO> findOneByUserId(Long userId) {
+        log.debug("Request to get WineCustomer by userId : {}", userId);
+        User user = new User();
+        user.setId(userId);
+        return wineCustomerRepository.findOneByUser(user) 
+            .map(wineCustomerMapper::toDto);
+    }
+
 
     /**
      * Delete the wineCustomer by id.

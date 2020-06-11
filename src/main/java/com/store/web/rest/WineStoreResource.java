@@ -4,6 +4,7 @@ import com.store.service.WineStoreService;
 import com.store.web.rest.errors.BadRequestAlertException;
 import com.store.service.dto.WineStoreDTO;
 import com.store.service.dto.WineStoreCriteria;
+import com.store.security.AuthoritiesConstants;
 import com.store.service.WineStoreQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -57,6 +59,7 @@ public class WineStoreResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/wine-stores")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineStoreDTO> createWineStore(@Valid @RequestBody WineStoreDTO wineStoreDTO) throws URISyntaxException {
         log.debug("REST request to save WineStore : {}", wineStoreDTO);
         if (wineStoreDTO.getId() != null) {
@@ -78,6 +81,7 @@ public class WineStoreResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/wine-stores")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineStoreDTO> updateWineStore(@Valid @RequestBody WineStoreDTO wineStoreDTO) throws URISyntaxException {
         log.debug("REST request to update WineStore : {}", wineStoreDTO);
         if (wineStoreDTO.getId() == null) {
@@ -97,6 +101,7 @@ public class WineStoreResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of wineStores in body.
      */
     @GetMapping("/wine-stores")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<WineStoreDTO>> getAllWineStores(WineStoreCriteria criteria, Pageable pageable) {
         log.debug("REST request to get WineStores by criteria: {}", criteria);
         Page<WineStoreDTO> page = wineStoreQueryService.findByCriteria(criteria, pageable);
@@ -111,6 +116,7 @@ public class WineStoreResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/wine-stores/count")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Long> countWineStores(WineStoreCriteria criteria) {
         log.debug("REST request to count WineStores by criteria: {}", criteria);
         return ResponseEntity.ok().body(wineStoreQueryService.countByCriteria(criteria));
@@ -123,6 +129,7 @@ public class WineStoreResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the wineStoreDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/wine-stores/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineStoreDTO> getWineStore(@PathVariable Long id) {
         log.debug("REST request to get WineStore : {}", id);
         Optional<WineStoreDTO> wineStoreDTO = wineStoreService.findOne(id);
@@ -136,6 +143,7 @@ public class WineStoreResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/wine-stores/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteWineStore(@PathVariable Long id) {
         log.debug("REST request to delete WineStore : {}", id);
         wineStoreService.delete(id);
