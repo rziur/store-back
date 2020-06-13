@@ -92,6 +92,10 @@ public class WineStockResourceIT {
     private static final String DEFAULT_IMAGE_URL = "AAAAAAAAAA";
     private static final String UPDATED_IMAGE_URL = "BBBBBBBBBB";
 
+    private static final Integer DEFAULT_RATING = 1;
+    private static final Integer UPDATED_RATING = 2;
+    private static final Integer SMALLER_RATING = 1 - 1;
+
     @Autowired
     private WineStockRepository wineStockRepository;
 
@@ -135,7 +139,8 @@ public class WineStockResourceIT {
             .lastPurchasePrice(DEFAULT_LAST_PURCHASE_PRICE)
             .lastPurchaseDate(DEFAULT_LAST_PURCHASE_DATE)
             .dateImport(DEFAULT_DATE_IMPORT)
-            .imageUrl(DEFAULT_IMAGE_URL);
+            .imageUrl(DEFAULT_IMAGE_URL)
+            .rating(DEFAULT_RATING);
         return wineStock;
     }
     /**
@@ -161,7 +166,8 @@ public class WineStockResourceIT {
             .lastPurchasePrice(UPDATED_LAST_PURCHASE_PRICE)
             .lastPurchaseDate(UPDATED_LAST_PURCHASE_DATE)
             .dateImport(UPDATED_DATE_IMPORT)
-            .imageUrl(UPDATED_IMAGE_URL);
+            .imageUrl(UPDATED_IMAGE_URL)
+            .rating(UPDATED_RATING);
         return wineStock;
     }
 
@@ -201,6 +207,7 @@ public class WineStockResourceIT {
         assertThat(testWineStock.getLastPurchaseDate()).isEqualTo(DEFAULT_LAST_PURCHASE_DATE);
         assertThat(testWineStock.getDateImport()).isEqualTo(DEFAULT_DATE_IMPORT);
         assertThat(testWineStock.getImageUrl()).isEqualTo(DEFAULT_IMAGE_URL);
+        assertThat(testWineStock.getRating()).isEqualTo(DEFAULT_RATING);
     }
 
     @Test
@@ -250,7 +257,8 @@ public class WineStockResourceIT {
             .andExpect(jsonPath("$.[*].lastPurchasePrice").value(hasItem(DEFAULT_LAST_PURCHASE_PRICE.doubleValue())))
             .andExpect(jsonPath("$.[*].lastPurchaseDate").value(hasItem(DEFAULT_LAST_PURCHASE_DATE.toString())))
             .andExpect(jsonPath("$.[*].dateImport").value(hasItem(DEFAULT_DATE_IMPORT.toString())))
-            .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGE_URL)));
+            .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGE_URL)))
+            .andExpect(jsonPath("$.[*].rating").value(hasItem(DEFAULT_RATING)));
     }
     
     @Test
@@ -279,7 +287,8 @@ public class WineStockResourceIT {
             .andExpect(jsonPath("$.lastPurchasePrice").value(DEFAULT_LAST_PURCHASE_PRICE.doubleValue()))
             .andExpect(jsonPath("$.lastPurchaseDate").value(DEFAULT_LAST_PURCHASE_DATE.toString()))
             .andExpect(jsonPath("$.dateImport").value(DEFAULT_DATE_IMPORT.toString()))
-            .andExpect(jsonPath("$.imageUrl").value(DEFAULT_IMAGE_URL));
+            .andExpect(jsonPath("$.imageUrl").value(DEFAULT_IMAGE_URL))
+            .andExpect(jsonPath("$.rating").value(DEFAULT_RATING));
     }
 
 
@@ -1713,6 +1722,111 @@ public class WineStockResourceIT {
         defaultWineStockShouldBeFound("imageUrl.doesNotContain=" + UPDATED_IMAGE_URL);
     }
 
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByRatingIsEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where rating equals to DEFAULT_RATING
+        defaultWineStockShouldBeFound("rating.equals=" + DEFAULT_RATING);
+
+        // Get all the wineStockList where rating equals to UPDATED_RATING
+        defaultWineStockShouldNotBeFound("rating.equals=" + UPDATED_RATING);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByRatingIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where rating not equals to DEFAULT_RATING
+        defaultWineStockShouldNotBeFound("rating.notEquals=" + DEFAULT_RATING);
+
+        // Get all the wineStockList where rating not equals to UPDATED_RATING
+        defaultWineStockShouldBeFound("rating.notEquals=" + UPDATED_RATING);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByRatingIsInShouldWork() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where rating in DEFAULT_RATING or UPDATED_RATING
+        defaultWineStockShouldBeFound("rating.in=" + DEFAULT_RATING + "," + UPDATED_RATING);
+
+        // Get all the wineStockList where rating equals to UPDATED_RATING
+        defaultWineStockShouldNotBeFound("rating.in=" + UPDATED_RATING);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByRatingIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where rating is not null
+        defaultWineStockShouldBeFound("rating.specified=true");
+
+        // Get all the wineStockList where rating is null
+        defaultWineStockShouldNotBeFound("rating.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByRatingIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where rating is greater than or equal to DEFAULT_RATING
+        defaultWineStockShouldBeFound("rating.greaterThanOrEqual=" + DEFAULT_RATING);
+
+        // Get all the wineStockList where rating is greater than or equal to (DEFAULT_RATING + 1)
+        defaultWineStockShouldNotBeFound("rating.greaterThanOrEqual=" + (DEFAULT_RATING + 1));
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByRatingIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where rating is less than or equal to DEFAULT_RATING
+        defaultWineStockShouldBeFound("rating.lessThanOrEqual=" + DEFAULT_RATING);
+
+        // Get all the wineStockList where rating is less than or equal to SMALLER_RATING
+        defaultWineStockShouldNotBeFound("rating.lessThanOrEqual=" + SMALLER_RATING);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByRatingIsLessThanSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where rating is less than DEFAULT_RATING
+        defaultWineStockShouldNotBeFound("rating.lessThan=" + DEFAULT_RATING);
+
+        // Get all the wineStockList where rating is less than (DEFAULT_RATING + 1)
+        defaultWineStockShouldBeFound("rating.lessThan=" + (DEFAULT_RATING + 1));
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByRatingIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where rating is greater than DEFAULT_RATING
+        defaultWineStockShouldNotBeFound("rating.greaterThan=" + DEFAULT_RATING);
+
+        // Get all the wineStockList where rating is greater than SMALLER_RATING
+        defaultWineStockShouldBeFound("rating.greaterThan=" + SMALLER_RATING);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -1736,7 +1850,8 @@ public class WineStockResourceIT {
             .andExpect(jsonPath("$.[*].lastPurchasePrice").value(hasItem(DEFAULT_LAST_PURCHASE_PRICE.doubleValue())))
             .andExpect(jsonPath("$.[*].lastPurchaseDate").value(hasItem(DEFAULT_LAST_PURCHASE_DATE.toString())))
             .andExpect(jsonPath("$.[*].dateImport").value(hasItem(DEFAULT_DATE_IMPORT.toString())))
-            .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGE_URL)));
+            .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGE_URL)))
+            .andExpect(jsonPath("$.[*].rating").value(hasItem(DEFAULT_RATING)));
 
         // Check, that the count call also returns 1
         restWineStockMockMvc.perform(get("/api/wine-stocks/count?sort=id,desc&" + filter))
@@ -1798,7 +1913,8 @@ public class WineStockResourceIT {
             .lastPurchasePrice(UPDATED_LAST_PURCHASE_PRICE)
             .lastPurchaseDate(UPDATED_LAST_PURCHASE_DATE)
             .dateImport(UPDATED_DATE_IMPORT)
-            .imageUrl(UPDATED_IMAGE_URL);
+            .imageUrl(UPDATED_IMAGE_URL)
+            .rating(UPDATED_RATING);
         WineStockDTO wineStockDTO = wineStockMapper.toDto(updatedWineStock);
 
         restWineStockMockMvc.perform(put("/api/wine-stocks")
@@ -1826,6 +1942,7 @@ public class WineStockResourceIT {
         assertThat(testWineStock.getLastPurchaseDate()).isEqualTo(UPDATED_LAST_PURCHASE_DATE);
         assertThat(testWineStock.getDateImport()).isEqualTo(UPDATED_DATE_IMPORT);
         assertThat(testWineStock.getImageUrl()).isEqualTo(UPDATED_IMAGE_URL);
+        assertThat(testWineStock.getRating()).isEqualTo(UPDATED_RATING);
     }
 
     @Test

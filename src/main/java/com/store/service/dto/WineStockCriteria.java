@@ -59,6 +59,8 @@ public class WineStockCriteria implements Serializable, Criteria {
 
     private StringFilter imageUrl;
 
+    private IntegerFilter rating;
+
     public WineStockCriteria() {
     }
 
@@ -80,6 +82,7 @@ public class WineStockCriteria implements Serializable, Criteria {
         this.lastPurchaseDate = other.lastPurchaseDate == null ? null : other.lastPurchaseDate.copy();
         this.dateImport = other.dateImport == null ? null : other.dateImport.copy();
         this.imageUrl = other.imageUrl == null ? null : other.imageUrl.copy();
+        this.rating = other.rating == null ? null : other.rating.copy();
     }
 
     @Override
@@ -223,6 +226,14 @@ public class WineStockCriteria implements Serializable, Criteria {
         this.imageUrl = imageUrl;
     }
 
+    public IntegerFilter getRating() {
+        return rating;
+    }
+
+    public void setRating(IntegerFilter rating) {
+        this.rating = rating;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -250,7 +261,8 @@ public class WineStockCriteria implements Serializable, Criteria {
             Objects.equals(lastPurchasePrice, that.lastPurchasePrice) &&
             Objects.equals(lastPurchaseDate, that.lastPurchaseDate) &&
             Objects.equals(dateImport, that.dateImport) &&
-            Objects.equals(imageUrl, that.imageUrl);
+            Objects.equals(imageUrl, that.imageUrl) &&
+            Objects.equals(rating, that.rating);
     }
 
     @Override
@@ -272,7 +284,8 @@ public class WineStockCriteria implements Serializable, Criteria {
         lastPurchasePrice,
         lastPurchaseDate,
         dateImport,
-        imageUrl
+        imageUrl,
+        rating
         );
     }
 
@@ -297,6 +310,7 @@ public class WineStockCriteria implements Serializable, Criteria {
                 (lastPurchaseDate != null ? "lastPurchaseDate=" + lastPurchaseDate + ", " : "") +
                 (dateImport != null ? "dateImport=" + dateImport + ", " : "") +
                 (imageUrl != null ? "imageUrl=" + imageUrl + ", " : "") +
+                (rating != null ? "rating=" + rating + ", " : "") +
             "}";
     }
 

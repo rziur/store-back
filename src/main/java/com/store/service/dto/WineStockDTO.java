@@ -45,6 +45,10 @@ public class WineStockDTO implements Serializable {
 
     private String imageUrl;
 
+    @Min(value = 1)
+    @Max(value = 5)
+    private Integer rating;
+
     
     public Long getId() {
         return id;
@@ -182,6 +186,14 @@ public class WineStockDTO implements Serializable {
         this.imageUrl = imageUrl;
     }
 
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -220,6 +232,7 @@ public class WineStockDTO implements Serializable {
             ", lastPurchaseDate='" + getLastPurchaseDate() + "'" +
             ", dateImport='" + getDateImport() + "'" +
             ", imageUrl='" + getImageUrl() + "'" +
+            ", rating=" + getRating() +
             "}";
     }
 }
