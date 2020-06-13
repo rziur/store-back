@@ -57,6 +57,8 @@ public class WineStockCriteria implements Serializable, Criteria {
 
     private InstantFilter dateImport;
 
+    private StringFilter imageUrl;
+
     public WineStockCriteria() {
     }
 
@@ -77,6 +79,7 @@ public class WineStockCriteria implements Serializable, Criteria {
         this.lastPurchasePrice = other.lastPurchasePrice == null ? null : other.lastPurchasePrice.copy();
         this.lastPurchaseDate = other.lastPurchaseDate == null ? null : other.lastPurchaseDate.copy();
         this.dateImport = other.dateImport == null ? null : other.dateImport.copy();
+        this.imageUrl = other.imageUrl == null ? null : other.imageUrl.copy();
     }
 
     @Override
@@ -212,6 +215,14 @@ public class WineStockCriteria implements Serializable, Criteria {
         this.dateImport = dateImport;
     }
 
+    public StringFilter getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(StringFilter imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -238,7 +249,8 @@ public class WineStockCriteria implements Serializable, Criteria {
             Objects.equals(pxRevCol, that.pxRevCol) &&
             Objects.equals(lastPurchasePrice, that.lastPurchasePrice) &&
             Objects.equals(lastPurchaseDate, that.lastPurchaseDate) &&
-            Objects.equals(dateImport, that.dateImport);
+            Objects.equals(dateImport, that.dateImport) &&
+            Objects.equals(imageUrl, that.imageUrl);
     }
 
     @Override
@@ -259,7 +271,8 @@ public class WineStockCriteria implements Serializable, Criteria {
         pxRevCol,
         lastPurchasePrice,
         lastPurchaseDate,
-        dateImport
+        dateImport,
+        imageUrl
         );
     }
 
@@ -283,6 +296,7 @@ public class WineStockCriteria implements Serializable, Criteria {
                 (lastPurchasePrice != null ? "lastPurchasePrice=" + lastPurchasePrice + ", " : "") +
                 (lastPurchaseDate != null ? "lastPurchaseDate=" + lastPurchaseDate + ", " : "") +
                 (dateImport != null ? "dateImport=" + dateImport + ", " : "") +
+                (imageUrl != null ? "imageUrl=" + imageUrl + ", " : "") +
             "}";
     }
 

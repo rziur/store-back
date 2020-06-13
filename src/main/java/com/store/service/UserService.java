@@ -153,6 +153,10 @@ public class UserService {
                 .map(Optional::get)
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
+        } else {
+            user.setAuthorities(
+                authorityRepository.findOneByName(AuthoritiesConstants.USER)
+            );
         }
         userRepository.save(user);
         log.debug("Created Information for User: {}", user);
@@ -280,7 +284,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public List<String> getAuthorities() {
-        return authorityRepository.findByNameNot(Constants.ROLE_USER).stream().map(Authority::getName).collect(Collectors.toList());
+        return authorityRepository.findByNameNot(AuthoritiesConstants.USER).stream().map(Authority::getName).collect(Collectors.toList());
     }
 
     public boolean checkPasswordLength(String password) {

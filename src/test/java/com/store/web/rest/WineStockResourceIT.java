@@ -89,6 +89,9 @@ public class WineStockResourceIT {
     private static final Instant DEFAULT_DATE_IMPORT = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE_IMPORT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
+    private static final String DEFAULT_IMAGE_URL = "AAAAAAAAAA";
+    private static final String UPDATED_IMAGE_URL = "BBBBBBBBBB";
+
     @Autowired
     private WineStockRepository wineStockRepository;
 
@@ -131,7 +134,8 @@ public class WineStockResourceIT {
             .pxRevCol(DEFAULT_PX_REV_COL)
             .lastPurchasePrice(DEFAULT_LAST_PURCHASE_PRICE)
             .lastPurchaseDate(DEFAULT_LAST_PURCHASE_DATE)
-            .dateImport(DEFAULT_DATE_IMPORT);
+            .dateImport(DEFAULT_DATE_IMPORT)
+            .imageUrl(DEFAULT_IMAGE_URL);
         return wineStock;
     }
     /**
@@ -156,7 +160,8 @@ public class WineStockResourceIT {
             .pxRevCol(UPDATED_PX_REV_COL)
             .lastPurchasePrice(UPDATED_LAST_PURCHASE_PRICE)
             .lastPurchaseDate(UPDATED_LAST_PURCHASE_DATE)
-            .dateImport(UPDATED_DATE_IMPORT);
+            .dateImport(UPDATED_DATE_IMPORT)
+            .imageUrl(UPDATED_IMAGE_URL);
         return wineStock;
     }
 
@@ -195,6 +200,7 @@ public class WineStockResourceIT {
         assertThat(testWineStock.getLastPurchasePrice()).isEqualTo(DEFAULT_LAST_PURCHASE_PRICE);
         assertThat(testWineStock.getLastPurchaseDate()).isEqualTo(DEFAULT_LAST_PURCHASE_DATE);
         assertThat(testWineStock.getDateImport()).isEqualTo(DEFAULT_DATE_IMPORT);
+        assertThat(testWineStock.getImageUrl()).isEqualTo(DEFAULT_IMAGE_URL);
     }
 
     @Test
@@ -243,7 +249,8 @@ public class WineStockResourceIT {
             .andExpect(jsonPath("$.[*].pxRevCol").value(hasItem(DEFAULT_PX_REV_COL.doubleValue())))
             .andExpect(jsonPath("$.[*].lastPurchasePrice").value(hasItem(DEFAULT_LAST_PURCHASE_PRICE.doubleValue())))
             .andExpect(jsonPath("$.[*].lastPurchaseDate").value(hasItem(DEFAULT_LAST_PURCHASE_DATE.toString())))
-            .andExpect(jsonPath("$.[*].dateImport").value(hasItem(DEFAULT_DATE_IMPORT.toString())));
+            .andExpect(jsonPath("$.[*].dateImport").value(hasItem(DEFAULT_DATE_IMPORT.toString())))
+            .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGE_URL)));
     }
     
     @Test
@@ -271,7 +278,8 @@ public class WineStockResourceIT {
             .andExpect(jsonPath("$.pxRevCol").value(DEFAULT_PX_REV_COL.doubleValue()))
             .andExpect(jsonPath("$.lastPurchasePrice").value(DEFAULT_LAST_PURCHASE_PRICE.doubleValue()))
             .andExpect(jsonPath("$.lastPurchaseDate").value(DEFAULT_LAST_PURCHASE_DATE.toString()))
-            .andExpect(jsonPath("$.dateImport").value(DEFAULT_DATE_IMPORT.toString()));
+            .andExpect(jsonPath("$.dateImport").value(DEFAULT_DATE_IMPORT.toString()))
+            .andExpect(jsonPath("$.imageUrl").value(DEFAULT_IMAGE_URL));
     }
 
 
@@ -1627,6 +1635,84 @@ public class WineStockResourceIT {
         // Get all the wineStockList where dateImport is null
         defaultWineStockShouldNotBeFound("dateImport.specified=false");
     }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByImageUrlIsEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where imageUrl equals to DEFAULT_IMAGE_URL
+        defaultWineStockShouldBeFound("imageUrl.equals=" + DEFAULT_IMAGE_URL);
+
+        // Get all the wineStockList where imageUrl equals to UPDATED_IMAGE_URL
+        defaultWineStockShouldNotBeFound("imageUrl.equals=" + UPDATED_IMAGE_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByImageUrlIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where imageUrl not equals to DEFAULT_IMAGE_URL
+        defaultWineStockShouldNotBeFound("imageUrl.notEquals=" + DEFAULT_IMAGE_URL);
+
+        // Get all the wineStockList where imageUrl not equals to UPDATED_IMAGE_URL
+        defaultWineStockShouldBeFound("imageUrl.notEquals=" + UPDATED_IMAGE_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByImageUrlIsInShouldWork() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where imageUrl in DEFAULT_IMAGE_URL or UPDATED_IMAGE_URL
+        defaultWineStockShouldBeFound("imageUrl.in=" + DEFAULT_IMAGE_URL + "," + UPDATED_IMAGE_URL);
+
+        // Get all the wineStockList where imageUrl equals to UPDATED_IMAGE_URL
+        defaultWineStockShouldNotBeFound("imageUrl.in=" + UPDATED_IMAGE_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByImageUrlIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where imageUrl is not null
+        defaultWineStockShouldBeFound("imageUrl.specified=true");
+
+        // Get all the wineStockList where imageUrl is null
+        defaultWineStockShouldNotBeFound("imageUrl.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllWineStocksByImageUrlContainsSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where imageUrl contains DEFAULT_IMAGE_URL
+        defaultWineStockShouldBeFound("imageUrl.contains=" + DEFAULT_IMAGE_URL);
+
+        // Get all the wineStockList where imageUrl contains UPDATED_IMAGE_URL
+        defaultWineStockShouldNotBeFound("imageUrl.contains=" + UPDATED_IMAGE_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByImageUrlNotContainsSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where imageUrl does not contain DEFAULT_IMAGE_URL
+        defaultWineStockShouldNotBeFound("imageUrl.doesNotContain=" + DEFAULT_IMAGE_URL);
+
+        // Get all the wineStockList where imageUrl does not contain UPDATED_IMAGE_URL
+        defaultWineStockShouldBeFound("imageUrl.doesNotContain=" + UPDATED_IMAGE_URL);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -1649,7 +1735,8 @@ public class WineStockResourceIT {
             .andExpect(jsonPath("$.[*].pxRevCol").value(hasItem(DEFAULT_PX_REV_COL.doubleValue())))
             .andExpect(jsonPath("$.[*].lastPurchasePrice").value(hasItem(DEFAULT_LAST_PURCHASE_PRICE.doubleValue())))
             .andExpect(jsonPath("$.[*].lastPurchaseDate").value(hasItem(DEFAULT_LAST_PURCHASE_DATE.toString())))
-            .andExpect(jsonPath("$.[*].dateImport").value(hasItem(DEFAULT_DATE_IMPORT.toString())));
+            .andExpect(jsonPath("$.[*].dateImport").value(hasItem(DEFAULT_DATE_IMPORT.toString())))
+            .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGE_URL)));
 
         // Check, that the count call also returns 1
         restWineStockMockMvc.perform(get("/api/wine-stocks/count?sort=id,desc&" + filter))
@@ -1710,7 +1797,8 @@ public class WineStockResourceIT {
             .pxRevCol(UPDATED_PX_REV_COL)
             .lastPurchasePrice(UPDATED_LAST_PURCHASE_PRICE)
             .lastPurchaseDate(UPDATED_LAST_PURCHASE_DATE)
-            .dateImport(UPDATED_DATE_IMPORT);
+            .dateImport(UPDATED_DATE_IMPORT)
+            .imageUrl(UPDATED_IMAGE_URL);
         WineStockDTO wineStockDTO = wineStockMapper.toDto(updatedWineStock);
 
         restWineStockMockMvc.perform(put("/api/wine-stocks")
@@ -1737,6 +1825,7 @@ public class WineStockResourceIT {
         assertThat(testWineStock.getLastPurchasePrice()).isEqualTo(UPDATED_LAST_PURCHASE_PRICE);
         assertThat(testWineStock.getLastPurchaseDate()).isEqualTo(UPDATED_LAST_PURCHASE_DATE);
         assertThat(testWineStock.getDateImport()).isEqualTo(UPDATED_DATE_IMPORT);
+        assertThat(testWineStock.getImageUrl()).isEqualTo(UPDATED_IMAGE_URL);
     }
 
     @Test

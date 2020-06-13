@@ -67,6 +67,9 @@ public class WineStock implements Serializable {
     @Column(name = "date_import")
     private Instant dateImport;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -270,6 +273,19 @@ public class WineStock implements Serializable {
     public void setDateImport(Instant dateImport) {
         this.dateImport = dateImport;
     }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public WineStock imageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+        return this;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -308,6 +324,7 @@ public class WineStock implements Serializable {
             ", lastPurchasePrice=" + getLastPurchasePrice() +
             ", lastPurchaseDate='" + getLastPurchaseDate() + "'" +
             ", dateImport='" + getDateImport() + "'" +
+            ", imageUrl='" + getImageUrl() + "'" +
             "}";
     }
 }

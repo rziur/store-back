@@ -65,6 +65,10 @@
     {
       "fieldName": "dateImport",
       "fieldType": "Instant"
+    },
+    {
+      "fieldName": "imageUrl",
+      "fieldType": "String"
     }
   ],
   "changelogDate": "20200607161123",

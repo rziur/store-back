@@ -136,6 +136,9 @@ public class WineStockQueryService extends QueryService<WineStock> {
             if (criteria.getDateImport() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getDateImport(), WineStock_.dateImport));
             }
+            if (criteria.getImageUrl() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getImageUrl(), WineStock_.imageUrl));
+            }
         }
         return specification;
     }
