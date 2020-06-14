@@ -96,6 +96,13 @@ public class WineStockResourceIT {
     private static final Integer UPDATED_RATING = 2;
     private static final Integer SMALLER_RATING = 1 - 1;
 
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final Integer DEFAULT_VOTE_COUNT = 1;
+    private static final Integer UPDATED_VOTE_COUNT = 2;
+    private static final Integer SMALLER_VOTE_COUNT = 1 - 1;
+
     @Autowired
     private WineStockRepository wineStockRepository;
 
@@ -140,7 +147,9 @@ public class WineStockResourceIT {
             .lastPurchaseDate(DEFAULT_LAST_PURCHASE_DATE)
             .dateImport(DEFAULT_DATE_IMPORT)
             .imageUrl(DEFAULT_IMAGE_URL)
-            .rating(DEFAULT_RATING);
+            .rating(DEFAULT_RATING)
+            .name(DEFAULT_NAME)
+            .voteCount(DEFAULT_VOTE_COUNT);
         return wineStock;
     }
     /**
@@ -167,7 +176,9 @@ public class WineStockResourceIT {
             .lastPurchaseDate(UPDATED_LAST_PURCHASE_DATE)
             .dateImport(UPDATED_DATE_IMPORT)
             .imageUrl(UPDATED_IMAGE_URL)
-            .rating(UPDATED_RATING);
+            .rating(UPDATED_RATING)
+            .name(UPDATED_NAME)
+            .voteCount(UPDATED_VOTE_COUNT);
         return wineStock;
     }
 
@@ -208,6 +219,8 @@ public class WineStockResourceIT {
         assertThat(testWineStock.getDateImport()).isEqualTo(DEFAULT_DATE_IMPORT);
         assertThat(testWineStock.getImageUrl()).isEqualTo(DEFAULT_IMAGE_URL);
         assertThat(testWineStock.getRating()).isEqualTo(DEFAULT_RATING);
+        assertThat(testWineStock.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testWineStock.getVoteCount()).isEqualTo(DEFAULT_VOTE_COUNT);
     }
 
     @Test
@@ -258,7 +271,9 @@ public class WineStockResourceIT {
             .andExpect(jsonPath("$.[*].lastPurchaseDate").value(hasItem(DEFAULT_LAST_PURCHASE_DATE.toString())))
             .andExpect(jsonPath("$.[*].dateImport").value(hasItem(DEFAULT_DATE_IMPORT.toString())))
             .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGE_URL)))
-            .andExpect(jsonPath("$.[*].rating").value(hasItem(DEFAULT_RATING)));
+            .andExpect(jsonPath("$.[*].rating").value(hasItem(DEFAULT_RATING)))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].voteCount").value(hasItem(DEFAULT_VOTE_COUNT)));
     }
     
     @Test
@@ -288,7 +303,9 @@ public class WineStockResourceIT {
             .andExpect(jsonPath("$.lastPurchaseDate").value(DEFAULT_LAST_PURCHASE_DATE.toString()))
             .andExpect(jsonPath("$.dateImport").value(DEFAULT_DATE_IMPORT.toString()))
             .andExpect(jsonPath("$.imageUrl").value(DEFAULT_IMAGE_URL))
-            .andExpect(jsonPath("$.rating").value(DEFAULT_RATING));
+            .andExpect(jsonPath("$.rating").value(DEFAULT_RATING))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.voteCount").value(DEFAULT_VOTE_COUNT));
     }
 
 
@@ -1827,6 +1844,189 @@ public class WineStockResourceIT {
         defaultWineStockShouldBeFound("rating.greaterThan=" + SMALLER_RATING);
     }
 
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where name equals to DEFAULT_NAME
+        defaultWineStockShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the wineStockList where name equals to UPDATED_NAME
+        defaultWineStockShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByNameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where name not equals to DEFAULT_NAME
+        defaultWineStockShouldNotBeFound("name.notEquals=" + DEFAULT_NAME);
+
+        // Get all the wineStockList where name not equals to UPDATED_NAME
+        defaultWineStockShouldBeFound("name.notEquals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultWineStockShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the wineStockList where name equals to UPDATED_NAME
+        defaultWineStockShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where name is not null
+        defaultWineStockShouldBeFound("name.specified=true");
+
+        // Get all the wineStockList where name is null
+        defaultWineStockShouldNotBeFound("name.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllWineStocksByNameContainsSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where name contains DEFAULT_NAME
+        defaultWineStockShouldBeFound("name.contains=" + DEFAULT_NAME);
+
+        // Get all the wineStockList where name contains UPDATED_NAME
+        defaultWineStockShouldNotBeFound("name.contains=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where name does not contain DEFAULT_NAME
+        defaultWineStockShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+
+        // Get all the wineStockList where name does not contain UPDATED_NAME
+        defaultWineStockShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByVoteCountIsEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where voteCount equals to DEFAULT_VOTE_COUNT
+        defaultWineStockShouldBeFound("voteCount.equals=" + DEFAULT_VOTE_COUNT);
+
+        // Get all the wineStockList where voteCount equals to UPDATED_VOTE_COUNT
+        defaultWineStockShouldNotBeFound("voteCount.equals=" + UPDATED_VOTE_COUNT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByVoteCountIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where voteCount not equals to DEFAULT_VOTE_COUNT
+        defaultWineStockShouldNotBeFound("voteCount.notEquals=" + DEFAULT_VOTE_COUNT);
+
+        // Get all the wineStockList where voteCount not equals to UPDATED_VOTE_COUNT
+        defaultWineStockShouldBeFound("voteCount.notEquals=" + UPDATED_VOTE_COUNT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByVoteCountIsInShouldWork() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where voteCount in DEFAULT_VOTE_COUNT or UPDATED_VOTE_COUNT
+        defaultWineStockShouldBeFound("voteCount.in=" + DEFAULT_VOTE_COUNT + "," + UPDATED_VOTE_COUNT);
+
+        // Get all the wineStockList where voteCount equals to UPDATED_VOTE_COUNT
+        defaultWineStockShouldNotBeFound("voteCount.in=" + UPDATED_VOTE_COUNT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByVoteCountIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where voteCount is not null
+        defaultWineStockShouldBeFound("voteCount.specified=true");
+
+        // Get all the wineStockList where voteCount is null
+        defaultWineStockShouldNotBeFound("voteCount.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByVoteCountIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where voteCount is greater than or equal to DEFAULT_VOTE_COUNT
+        defaultWineStockShouldBeFound("voteCount.greaterThanOrEqual=" + DEFAULT_VOTE_COUNT);
+
+        // Get all the wineStockList where voteCount is greater than or equal to UPDATED_VOTE_COUNT
+        defaultWineStockShouldNotBeFound("voteCount.greaterThanOrEqual=" + UPDATED_VOTE_COUNT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByVoteCountIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where voteCount is less than or equal to DEFAULT_VOTE_COUNT
+        defaultWineStockShouldBeFound("voteCount.lessThanOrEqual=" + DEFAULT_VOTE_COUNT);
+
+        // Get all the wineStockList where voteCount is less than or equal to SMALLER_VOTE_COUNT
+        defaultWineStockShouldNotBeFound("voteCount.lessThanOrEqual=" + SMALLER_VOTE_COUNT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByVoteCountIsLessThanSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where voteCount is less than DEFAULT_VOTE_COUNT
+        defaultWineStockShouldNotBeFound("voteCount.lessThan=" + DEFAULT_VOTE_COUNT);
+
+        // Get all the wineStockList where voteCount is less than UPDATED_VOTE_COUNT
+        defaultWineStockShouldBeFound("voteCount.lessThan=" + UPDATED_VOTE_COUNT);
+    }
+
+    @Test
+    @Transactional
+    public void getAllWineStocksByVoteCountIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        wineStockRepository.saveAndFlush(wineStock);
+
+        // Get all the wineStockList where voteCount is greater than DEFAULT_VOTE_COUNT
+        defaultWineStockShouldNotBeFound("voteCount.greaterThan=" + DEFAULT_VOTE_COUNT);
+
+        // Get all the wineStockList where voteCount is greater than SMALLER_VOTE_COUNT
+        defaultWineStockShouldBeFound("voteCount.greaterThan=" + SMALLER_VOTE_COUNT);
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -1851,7 +2051,9 @@ public class WineStockResourceIT {
             .andExpect(jsonPath("$.[*].lastPurchaseDate").value(hasItem(DEFAULT_LAST_PURCHASE_DATE.toString())))
             .andExpect(jsonPath("$.[*].dateImport").value(hasItem(DEFAULT_DATE_IMPORT.toString())))
             .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGE_URL)))
-            .andExpect(jsonPath("$.[*].rating").value(hasItem(DEFAULT_RATING)));
+            .andExpect(jsonPath("$.[*].rating").value(hasItem(DEFAULT_RATING)))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].voteCount").value(hasItem(DEFAULT_VOTE_COUNT)));
 
         // Check, that the count call also returns 1
         restWineStockMockMvc.perform(get("/api/wine-stocks/count?sort=id,desc&" + filter))
@@ -1914,7 +2116,9 @@ public class WineStockResourceIT {
             .lastPurchaseDate(UPDATED_LAST_PURCHASE_DATE)
             .dateImport(UPDATED_DATE_IMPORT)
             .imageUrl(UPDATED_IMAGE_URL)
-            .rating(UPDATED_RATING);
+            .rating(UPDATED_RATING)
+            .name(UPDATED_NAME)
+            .voteCount(UPDATED_VOTE_COUNT);
         WineStockDTO wineStockDTO = wineStockMapper.toDto(updatedWineStock);
 
         restWineStockMockMvc.perform(put("/api/wine-stocks")
@@ -1943,6 +2147,8 @@ public class WineStockResourceIT {
         assertThat(testWineStock.getDateImport()).isEqualTo(UPDATED_DATE_IMPORT);
         assertThat(testWineStock.getImageUrl()).isEqualTo(UPDATED_IMAGE_URL);
         assertThat(testWineStock.getRating()).isEqualTo(UPDATED_RATING);
+        assertThat(testWineStock.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testWineStock.getVoteCount()).isEqualTo(UPDATED_VOTE_COUNT);
     }
 
     @Test

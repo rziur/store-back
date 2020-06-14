@@ -15,8 +15,24 @@ public class WineOfferDTO implements Serializable {
 
     private Float specialPrice;
 
-
     private Long wineStockId;
+
+    private String wineStockSupplier;
+
+    private String wineStockRegion;
+
+    private String wineStockDescription;
+
+    private String wineStockImageUrl;
+
+    private Integer wineStockRating;
+
+    private String wineStoreName;
+
+    private String wineStoreDescription;
+
+    private Integer wineStoreRating;
+
 
     private Long wineStoreId;
     
@@ -60,12 +76,76 @@ public class WineOfferDTO implements Serializable {
         this.wineStockId = wineStockId;
     }
 
+    public String getWineStockSupplier() {
+        return wineStockSupplier;
+    }
+
+    public void setWineStockSupplier(String wineStockSupplier) {
+        this.wineStockSupplier = wineStockSupplier;
+    }
+
+    public String getWineStockRegion() {
+        return wineStockRegion;
+    }
+
+    public void setWineStockRegion(String wineStockRegion) {
+        this.wineStockRegion = wineStockRegion;
+    }
+
+    public String getWineStockDescription() {
+        return wineStockDescription;
+    }
+
+    public void setWineStockDescription(String wineStockDescription) {
+        this.wineStockDescription = wineStockDescription;
+    }
+
+    public String getWineStockImageUrl() {
+        return wineStockImageUrl;
+    }
+
+    public void setWineStockImageUrl(String wineStockImageUrl) {
+        this.wineStockImageUrl = wineStockImageUrl;
+    }
+
+    public Integer getWineStockRating() {
+        return wineStockRating;
+    }
+
+    public void setWineStockRating(Integer wineStockRating) {
+        this.wineStockRating = wineStockRating;
+    }
+
     public Long getWineStoreId() {
         return wineStoreId;
     }
 
     public void setWineStoreId(Long wineStoreId) {
         this.wineStoreId = wineStoreId;
+    }
+
+    public String getWineStoreName() {
+        return wineStoreName;
+    }
+
+    public void setWineStoreName(String wineStoreName) {
+        this.wineStoreName = wineStoreName;
+    }
+
+    public String getWineStoreDescription() {
+        return wineStoreDescription;
+    }
+
+    public void setWineStoreDescription(String wineStoreDescription) {
+        this.wineStoreDescription = wineStoreDescription;
+    }
+
+    public Integer getWineStoreRating() {
+        return wineStoreRating;
+    }
+
+    public void setWineStoreRating(Integer wineStoreRating) {
+        this.wineStoreRating = wineStoreRating;
     }
 
     @Override

@@ -142,6 +142,12 @@ public class WineStockQueryService extends QueryService<WineStock> {
             if (criteria.getRating() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getRating(), WineStock_.rating));
             }
+            if (criteria.getName() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getName(), WineStock_.name));
+            }
+            if (criteria.getVoteCount() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getVoteCount(), WineStock_.voteCount));
+            }
         }
         return specification;
     }

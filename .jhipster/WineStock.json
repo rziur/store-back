@@ -76,6 +76,14 @@
       "fieldValidateRules": ["min", "max"],
       "fieldValidateRulesMin": "1",
       "fieldValidateRulesMax": "5"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "voteCount",
+      "fieldType": "Integer"
     }
   ],
   "changelogDate": "20200607161123",

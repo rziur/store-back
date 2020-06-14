@@ -61,6 +61,10 @@ public class WineStockCriteria implements Serializable, Criteria {
 
     private IntegerFilter rating;
 
+    private StringFilter name;
+
+    private IntegerFilter voteCount;
+
     public WineStockCriteria() {
     }
 
@@ -83,6 +87,8 @@ public class WineStockCriteria implements Serializable, Criteria {
         this.dateImport = other.dateImport == null ? null : other.dateImport.copy();
         this.imageUrl = other.imageUrl == null ? null : other.imageUrl.copy();
         this.rating = other.rating == null ? null : other.rating.copy();
+        this.name = other.name == null ? null : other.name.copy();
+        this.voteCount = other.voteCount == null ? null : other.voteCount.copy();
     }
 
     @Override
@@ -234,6 +240,22 @@ public class WineStockCriteria implements Serializable, Criteria {
         this.rating = rating;
     }
 
+    public StringFilter getName() {
+        return name;
+    }
+
+    public void setName(StringFilter name) {
+        this.name = name;
+    }
+
+    public IntegerFilter getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(IntegerFilter voteCount) {
+        this.voteCount = voteCount;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -262,7 +284,9 @@ public class WineStockCriteria implements Serializable, Criteria {
             Objects.equals(lastPurchaseDate, that.lastPurchaseDate) &&
             Objects.equals(dateImport, that.dateImport) &&
             Objects.equals(imageUrl, that.imageUrl) &&
-            Objects.equals(rating, that.rating);
+            Objects.equals(rating, that.rating) &&
+            Objects.equals(name, that.name) &&
+            Objects.equals(voteCount, that.voteCount);
     }
 
     @Override
@@ -285,7 +309,9 @@ public class WineStockCriteria implements Serializable, Criteria {
         lastPurchaseDate,
         dateImport,
         imageUrl,
-        rating
+        rating,
+        name,
+        voteCount
         );
     }
 
@@ -311,6 +337,8 @@ public class WineStockCriteria implements Serializable, Criteria {
                 (dateImport != null ? "dateImport=" + dateImport + ", " : "") +
                 (imageUrl != null ? "imageUrl=" + imageUrl + ", " : "") +
                 (rating != null ? "rating=" + rating + ", " : "") +
+                (name != null ? "name=" + name + ", " : "") +
+                (voteCount != null ? "voteCount=" + voteCount + ", " : "") +
             "}";
     }
 

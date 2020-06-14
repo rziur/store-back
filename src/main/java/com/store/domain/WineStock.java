@@ -75,6 +75,12 @@ public class WineStock implements Serializable {
     @Column(name = "rating")
     private Integer rating;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "vote_count")
+    private Integer voteCount;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -304,6 +310,32 @@ public class WineStock implements Serializable {
     public void setRating(Integer rating) {
         this.rating = rating;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public WineStock name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getVoteCount() {
+        return voteCount;
+    }
+
+    public WineStock voteCount(Integer voteCount) {
+        this.voteCount = voteCount;
+        return this;
+    }
+
+    public void setVoteCount(Integer voteCount) {
+        this.voteCount = voteCount;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -344,6 +376,8 @@ public class WineStock implements Serializable {
             ", dateImport='" + getDateImport() + "'" +
             ", imageUrl='" + getImageUrl() + "'" +
             ", rating=" + getRating() +
+            ", name='" + getName() + "'" +
+            ", voteCount=" + getVoteCount() +
             "}";
     }
 }
