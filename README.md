@@ -28,7 +28,7 @@ If you want to sign in, you can try the default accounts:
 
 ***Wine store API***
  
-   - [x] Jhipster
+   - [x] jhipster
    - [x] Monolithic application
    - [x] Separating the front-end and the API server
    - [x] Using Angular + TypeScript
