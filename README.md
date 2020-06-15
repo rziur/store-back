@@ -26,7 +26,7 @@ If you want to sign in, you can try the default accounts:
 - Administrator (login="admin" and password="admin")
 - User (login="anne" and password="user").
 
-**Wine store API**. 
+***Wine store API***
  
    - [x] Jhipster
    - [x] Monolithic application
