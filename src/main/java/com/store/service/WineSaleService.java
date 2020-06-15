@@ -1,5 +1,6 @@
 package com.store.service;
 
+import com.store.domain.WineCustomer;
 import com.store.service.dto.WineSaleDTO;
 
 import org.springframework.data.domain.Page;
@@ -27,6 +28,15 @@ public interface WineSaleService {
      * @return the list of entities.
      */
     Page<WineSaleDTO> findAll(Pageable pageable);
+
+
+    /**
+     * Get all the wineSales.
+     * @param wineCustomer
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    public Page<WineSaleDTO> findAllByCustomer(WineCustomer wineCustomer,Pageable pageable);
 
 
     /**

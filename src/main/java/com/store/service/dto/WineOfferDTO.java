@@ -27,13 +27,18 @@ public class WineOfferDTO implements Serializable {
 
     private Integer wineStockRating;
 
+    private String wineStockName;
+
+    private Integer wineStockVoteCount;
+
+    private Integer wineStockSales;
+
     private String wineStoreName;
 
     private String wineStoreDescription;
 
     private Integer wineStoreRating;
-
-
+    
     private Long wineStoreId;
     
     public Long getId() {
@@ -146,6 +151,30 @@ public class WineOfferDTO implements Serializable {
 
     public void setWineStoreRating(Integer wineStoreRating) {
         this.wineStoreRating = wineStoreRating;
+    }
+
+    public String getWineStockName() {
+        return wineStockName;
+    }
+
+    public void setWineStockName(String wineStockName) {
+        this.wineStockName = wineStockName;
+    }
+    
+    public Integer getWineStockVoteCount() {
+        return wineStockVoteCount;
+    }
+
+    public void setWineStockVoteCount(Integer wineStockVoteCount) {
+        this.wineStockVoteCount = wineStockVoteCount;
+    }
+
+    public Integer getWineStockSales() {
+        return wineStockSales;
+    }
+
+    public void setWineStockSales(Integer wineStockSales) {
+        this.wineStockSales = wineStockSales;
     }
 
     @Override

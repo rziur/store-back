@@ -1,6 +1,7 @@
 package com.store.service.impl;
 
 import com.store.service.WineSaleService;
+import com.store.domain.WineCustomer;
 import com.store.domain.WineSale;
 import com.store.repository.WineSaleRepository;
 import com.store.service.dto.WineSaleDTO;
@@ -58,6 +59,20 @@ public class WineSaleServiceImpl implements WineSaleService {
     public Page<WineSaleDTO> findAll(Pageable pageable) {
         log.debug("Request to get all WineSales");
         return wineSaleRepository.findAll(pageable)
+            .map(wineSaleMapper::toDto);
+    }
+
+    /**
+     * Get all the wineSales.
+     * @param wineCustomer
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<WineSaleDTO> findAllByCustomer(WineCustomer wineCustomer,Pageable pageable) {
+        log.debug("Request to get all WineSales by wineCustomer");
+        return wineSaleRepository.findByWineCustomer(wineCustomer, pageable)
             .map(wineSaleMapper::toDto);
     }
 

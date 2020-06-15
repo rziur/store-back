@@ -13,11 +13,14 @@ import org.mapstruct.*;
 public interface WineOfferMapper extends EntityMapper<WineOfferDTO, WineOffer> {
 
     @Mapping(source = "wineStock.id", target = "wineStockId")
+    @Mapping(source = "wineStock.name", target = "wineStockName")
     @Mapping(source = "wineStock.supplier", target = "wineStockSupplier")
     @Mapping(source = "wineStock.region", target = "wineStockRegion")
     @Mapping(source = "wineStock.description", target = "wineStockDescription")
     @Mapping(source = "wineStock.imageUrl", target = "wineStockImageUrl")
     @Mapping(source = "wineStock.rating", target = "wineStockRating")
+    @Mapping(source = "wineStock.voteCount", target = "wineStockVoteCount")
+    @Mapping(source = "wineStock.sales", target = "wineStockSales")
     @Mapping(source = "wineStore.id", target = "wineStoreId")
     @Mapping(source = "wineStore.name", target = "wineStoreName")
     @Mapping(source = "wineStore.description", target = "wineStoreDescription")

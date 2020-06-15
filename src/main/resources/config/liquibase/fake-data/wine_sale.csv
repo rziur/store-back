@@ -1,11 +1,21 @@
-id;shipping_description;shipping_amount;discount;total;state
-1;Direct technologies;52831;34192;2185;35401
-2;Nevada;81090;94404;21569;75835
-3;interfaces Seamless;99701;91689;94152;28916
-4;compressing Rustic Fresh Shirt;84029;84547;22305;29432
-5;azure;26800;18551;8504;93151
-6;Identity protocol;81382;82168;72430;8304
-7;Missouri Auto Loan Account;66831;13593;61502;95049
-8;Borders microchip;29993;44813;83376;67267
-9;Berkshire Shoes;37861;55798;19576;14783
-10;functionalities protocol program;53336;30894;80148;50079
+id;shipping_description;shipping_amount;discount;total;state;wine_customer_id;wine_stock_id;wine_store_id 
+1;Direct technologies;52831;34192;2185;35401;9;1;9
+2;Nevada;81090;94404;21569;75835;9;2;8
+3;interfaces Seamless;99701;91689;94152;28916;9;3;7
+4;compressing Rustic Fresh Shirt;84029;84547;22305;29432;9;4;6
+5;azure;26800;18551;8504;93151;9;5;5
+6;Identity protocol;81382;82168;72430;8304;9;6;4
+7;Missouri Auto Loan Account;66831;13593;61502;95049;9;7;10
+8;Borders microchip;29993;44813;83376;67267;9;8;3
+9;Berkshire Shoes;37861;55798;19576;14783;9;9;2
+10;functionalities protocol program;53336;30894;80148;50079;9;10;1
+11;Direct technologies;52831;34192;2185;35401;11;1;9
+12;Nevada;81090;94404;21569;75835;11;2;8
+13;interfaces Seamless;99701;91689;94152;28916;11;3;7
+14;compressing Rustic Fresh Shirt;84029;84547;22305;29432;11;4;6
+15;azure;26800;18551;8504;93151;11;5;5
+16;Identity protocol;81382;82168;72430;8304;11;6;4
+17;Missouri Auto Loan Account;66831;13593;61502;95049;11;7;10
+18;Borders microchip;29993;44813;83376;67267;11;8;3
+19;Berkshire Shoes;37861;55798;19576;14783;11;9;2
+20;functionalities protocol program;53336;30894;80148;50079;11;10;1

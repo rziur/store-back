@@ -3,8 +3,14 @@ package com.store.web.rest;
 import com.store.service.WineSaleService;
 import com.store.web.rest.errors.BadRequestAlertException;
 import com.store.service.dto.WineSaleDTO;
+import com.store.service.dto.WineCustomerDTO;
 import com.store.service.dto.WineSaleCriteria;
+import com.store.domain.User;
+import com.store.domain.WineCustomer;
+import com.store.repository.UserRepository;
 import com.store.security.AuthoritiesConstants;
+import com.store.security.SecurityUtils;
+import com.store.service.WineCustomerService;
 import com.store.service.WineSaleQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -34,6 +40,12 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class WineSaleResource {
 
+    private static class AccountResourceException extends RuntimeException {
+        private AccountResourceException(String message) {
+            super(message);
+        }
+    }
+
     private final Logger log = LoggerFactory.getLogger(WineSaleResource.class);
 
     private static final String ENTITY_NAME = "wineSale";
@@ -45,9 +57,15 @@ public class WineSaleResource {
 
     private final WineSaleQueryService wineSaleQueryService;
 
-    public WineSaleResource(WineSaleService wineSaleService, WineSaleQueryService wineSaleQueryService) {
+    private final UserRepository userRepository;
+
+    private final WineCustomerService wineCustomerService;
+
+    public WineSaleResource(WineSaleService wineSaleService, WineSaleQueryService wineSaleQueryService, UserRepository userRepository, WineCustomerService wineCustomerService) {
         this.wineSaleService = wineSaleService;
         this.wineSaleQueryService = wineSaleQueryService;
+        this.userRepository = userRepository;
+        this.wineCustomerService = wineCustomerService;
     }
 
     /**
@@ -100,9 +118,42 @@ public class WineSaleResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of wineSales in body.
      */
     @GetMapping("/wine-sales")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<WineSaleDTO>> getAllWineSales(WineSaleCriteria criteria, Pageable pageable) {
         log.debug("REST request to get WineSales by criteria: {}", criteria);
         Page<WineSaleDTO> page = wineSaleQueryService.findByCriteria(criteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /wine-sales} : get all the wineSales of current user.
+     *
+     * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of wineSales in body.
+     */
+    @GetMapping("/wine-sales/customer")
+    public ResponseEntity<List<WineSaleDTO>> getAllWineSalesCustomer(Pageable pageable) {
+      
+        String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResourceException("Current user login not found"));
+       
+        Optional<User> existingUser = userRepository.findOneByLogin(userLogin.toLowerCase());
+        
+        Optional<WineCustomerDTO> existingCustomer = null;
+
+        if (existingUser.isPresent()) {
+            
+            existingCustomer = wineCustomerService.findOneByUserId(existingUser.get().getId());
+
+            if(!existingCustomer.isPresent()) {
+                throw new AccountResourceException("Current user login not found");
+            }
+
+        }
+        WineCustomer customer = new WineCustomer();
+        customer.setId(existingCustomer.get().getId());
+        Page<WineSaleDTO> page = wineSaleService.findAllByCustomer(customer, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -114,6 +165,7 @@ public class WineSaleResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/wine-sales/count")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Long> countWineSales(WineSaleCriteria criteria) {
         log.debug("REST request to count WineSales by criteria: {}", criteria);
         return ResponseEntity.ok().body(wineSaleQueryService.countByCriteria(criteria));
@@ -126,6 +178,7 @@ public class WineSaleResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the wineSaleDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/wine-sales/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<WineSaleDTO> getWineSale(@PathVariable Long id) {
         log.debug("REST request to get WineSale : {}", id);
         Optional<WineSaleDTO> wineSaleDTO = wineSaleService.findOne(id);

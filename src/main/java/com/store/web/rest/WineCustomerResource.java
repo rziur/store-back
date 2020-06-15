@@ -223,6 +223,7 @@ public class WineCustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of wineCustomers in body.
      */
     @GetMapping("/wine-customers")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<WineCustomerDTO>> getAllWineCustomers(WineCustomerCriteria criteria, Pageable pageable) {
         log.debug("REST request to get WineCustomers by criteria: {}", criteria);
         Page<WineCustomerDTO> page = wineCustomerQueryService.findByCriteria(criteria, pageable);
@@ -237,6 +238,7 @@ public class WineCustomerResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/wine-customers/count")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Long> countWineCustomers(WineCustomerCriteria criteria) {
         log.debug("REST request to count WineCustomers by criteria: {}", criteria);
         return ResponseEntity.ok().body(wineCustomerQueryService.countByCriteria(criteria));
